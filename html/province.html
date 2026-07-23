@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/province.css">
+    <title>Province Weather</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+<div id="bg-overlay" class="bg-overlay"></div>
+
+<div class="dashboard">
+    
+    <h1 id="main-page-title">Weather Overview</h1>
+
+    <div class="card chart-card">
+    <h2>Temperature Today</h2>
+    <div class="chart-box">
+        <canvas id="hourlyChart"></canvas>
+    </div>
+    </div>
+
+    
+   <div class="card forecast-card">
+    <h2>5 Days Forecast</h2> 
+    
+    <div id="forecast-days" class="forecast-days-container"></div>
+    </div>
+
+    
+    <div class="weather-card">
+        <div class="weather-animation">
+           
+        </div>
+
+        <div class="glass-layer">
+    <div class="glass-layer">
+    <h1 id="provinceName">Gilan</h1>
+    
+    
+    <div class="weather-icon" id="weather-icon">🌧️</div>
+
+    <div class="temperature" id="temp-val">18°</div>
+    
+    <p id="weather-desc">Rainy</p>
+
+    <div class="info">
+        <div>
+            💧 <span>Humidity</span> 
+    
+            <b id="humidity-val">70%</b>
+        </div>
+        <div>
+            🌬️ <span>Wind</span> 
+            
+            <b id="wind-val">12 km/h</b>
+        </div>
+    </div>
+</div>
+            
+        </div>
+    </div>
+
+    
+    <div class="card advice-card">
+        <h2>Weather Advice</h2>
+        <p id="advice-text">Loading advice...</p>
+        
+    </div>
+
+    
+    <div class="card highlights-card">
+    <h2>Today's Highlights</h2>
+    <div class="highlights-grid">
+        <div class="highlight-box">
+            <span class="hl-title">Feels Like</span>
+            <span class="hl-value" id="hl-feels">--°</span>
+        </div>
+        <div class="highlight-box">
+            <span class="hl-title">Pressure</span>
+            <span class="hl-value" id="hl-pressure">-- hPa</span>
+        </div>
+        <div class="highlight-box">
+            <span class="hl-title">Visibility</span>
+            <span class="hl-value" id="hl-visibility">-- km</span>
+        </div>
+        <div class="highlight-box">
+            <span class="hl-title">Sunrise / Sunset</span>
+            <span class="hl-value" id="hl-sun" style="font-size: 13px;">--:-- / --:--</span>
+        </div>
+    </div>
+</div>
+
+<div class="card aqi-card">
+    <h2>Air Quality Index</h2>
+    
+    <div class="gauge-wrapper" id="aqi-section">
+        <div class="gauge-container">
+            
+            <div class="gauge-arc"></div>
+            
+            <div class="gauge-needle" id="gauge-needle">
+                <div class="needle-center"></div>
+            </div>
+            
+            <div class="gauge-labels">
+                <span class="l-0">0</span>
+                <span class="l-50">50</span>
+                <span class="l-100">100</span>
+                <span class="l-200">200</span>
+                <span class="l-300">300</span>
+                <span class="l-400">400</span>
+                <span class="l-500">500</span>
+            </div>
+        </div>
+        
+        <div class="aqi-info">
+            <div class="aqi-number" id="aqi-value">--</div>
+            <div class="aqi-status" id="aqi-status">Loading...</div>
+        </div>
+    </div>
+</div>
+
+   <div class="card location-card">
+    <h2>Location Info</h2>
+    <div class="location-details">
+        <div class="loc-item">
+            <span>Country</span> 
+            <span id="loc-country">--</span>
+        </div>
+        <div class="loc-item">
+            <span>Latitude</span> 
+            <span id="loc-lat">--</span>
+        </div>
+        <div class="loc-item">
+            <span>Longitude</span> 
+            <span id="loc-lon">--</span>
+        </div>
+        <div class="loc-item">
+            <span>Timezone</span> 
+            <span id="loc-timezone">--</span>
+        </div>
+    </div>
+</div>
+
+</div>
+
+<script src="../js/province.js"></script>
+
+</body>
+</html>
