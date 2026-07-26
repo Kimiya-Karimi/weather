@@ -6,12 +6,53 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/style.css">
     <title>Weather</title>
+	<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=WindSong:wght@400;500&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Hurricane&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=MonteCarlo&display=swap" rel="stylesheet">
 </head>
 
 <body>
     
-
-    <div class="map-container">
+<div class="top-bar">
+    <h1 class="main-title">
+        <span class="iran-text">IRAN</span><br>
+        <span class="sub-text">Weather Map</span>
+    </h1>
+    
+	<div class="temperature-legend">
+    <div class="legend-item">
+        <span class="color-dot hot-dot"></span>
+        <span class="legend-text">Hot (35°C +)</span>
+    </div>
+    <div class="legend-item">
+        <span class="color-dot warm-dot"></span>
+        <span class="legend-text">Warm (25 - 35)</span>
+    </div>
+    <div class="legend-item">
+        <span class="color-dot mild-dot"></span>
+        <span class="legend-text">Mild (10 - 25)</span>
+    </div>
+    <div class="legend-item">
+        <span class="color-dot cold-dot"></span>
+        <span class="legend-text">Cold (< 10°C)</span>
+    </div>
+</div>
+    <!-- سرچ‌باکس رو فعلا می‌ذاریم سمت راست بمونه -->
+    <div class="search-box">
+    <input type="text" id="searchInput" placeholder="Search province...">
+    <button id="searchBtn">
+        
+        <svg viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+			
+        </svg>
+    </button>
+</div>
+</div>
+<div class="map-container">
 <svg version="1.1"
 	 id="Iran" xmlns:ns="http://ns.adobe.com/SaveForWeb/1.0/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" inkscape:version="0.48.2 r9819" sodipodi:docname="Iran_location_map.svg"
 	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" 
@@ -2817,6 +2858,7 @@
 <line fill="none" stroke="#000000" stroke-width="0.5044" x1="95.167" y1="176.484" x2="66.766" y2="289.917"/>
 </svg>
 
+</div>
 </div>
 
 <div id="tooltip"></div>

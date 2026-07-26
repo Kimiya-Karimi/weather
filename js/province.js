@@ -1,4 +1,38 @@
-
+const provinceCapitals = {
+    "Tehran": "Tehran",
+    "Gilan": "Rasht",
+    "Guilan": "Rasht",
+    "Isfahan": "Isfahan",
+    "Fars": "Shiraz",
+    "Mazandaran": "Sari",
+    "Razavi Khorasan": "Mashhad",
+    "East Azerbaijan": "Tabriz",
+    "West Azerbaijan": "Urmia",
+    "West Azerbaijan": "Orumiyeh",
+    "Ardabil": "Ardabil",
+    "Golestan": "Gorgan",
+    "North Khorasan": "Bojnurd",
+    "South Khorasan": "Birjand",
+    "Semnan": "Semnan",
+    "Qom": "Qom",
+    "Markazi": "Arak",
+    "Qazvin": "Qazvin",
+    "Zanjan": "Zanjan",
+    "Kurdistan": "Sanandaj",
+    "Kermanshah": "Kermanshah",
+    "Hamadan": "Hamedan",
+    "Lorestan": "Khorramabad",
+    "Ilam": "Ilam",
+    "Khuzestan": "Ahvaz",
+    "Chaharmahal and Bakhtiari": "Shahr-e Kord",
+    "Kohgiluyeh and Boyer-Ahmad": "Yasuj",
+    "Bushehr": "Bushehr",
+    "Yazd": "Yazd",
+    "Kerman": "Kerman",
+    "Hormozgan": "Bandar Abbas",
+    "Sistan and Baluchestan": "Zahedan",
+    "Alborz": "Karaj"
+};
 const urlParams = new URLSearchParams(window.location.search);
 const provinceName = urlParams.get('name');
 
@@ -33,8 +67,18 @@ if (provinceName) {
 
 function getWeatherData(city) {
     const apiKey = "be19ea3bdb73fda4db896dcf5aa1e82f"; 
-    const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city},IR&appid=${apiKey}&units=metric`;
+    
+    // کلمه city اینجا همون اسم استانه. مرکز اون استان رو از دیکشنری پیدا می‌کنیم:
+    let capitalCity = provinceCapitals[city];
 
+    // این یه شرط احتیاطیه: اگر استانی کلیک شد که تو لیست نبود، همون اسم اولیه رو بفرست تا ارور نده
+    if (!capitalCity) {
+        capitalCity = city;
+    }
+
+    // حالا فقط یک بار لینک نهایی رو می‌سازیم و شهرِ مرکز رو به همراه شناسه ایران (IR) بهش می‌دیم
+    const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${capitalCity},IR&appid=${apiKey}&units=metric`;
+    
     fetch(apiUrl)
         .then(response => {
             if (!response.ok) throw new Error("Network response was not ok");
@@ -42,6 +86,8 @@ function getWeatherData(city) {
         })
         .then(data => {
             const temp = Math.round(data.main.temp);
+            const currentTemp = Math.round(data.main.temp);
+            changeProvinceBackground(currentTemp); // فراخوانی تابع با دمای همان شهر
             const humidity = data.main.humidity;
             const windSpeed = Math.round(data.wind.speed * 3.6); 
             const weatherMain = data.weather[0].main; 
@@ -54,6 +100,10 @@ function getWeatherData(city) {
             const sunriseTime = new Date(data.sys.sunrise * 1000).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
             const sunsetTime = new Date(data.sys.sunset * 1000).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
 
+            // پیدا کردن المان با آیدی درست در HTML و آپدیت کردن آن با دیتای API
+            // پیدا کردن المان با آیدی درست در HTML و آپدیت کردن آن با نام مرکز استان
+            const cityNameElement = document.getElementById('provinceName'); 
+            if (cityNameElement) cityNameElement.textContent = capitalCity;
             // آپدیت صفحه (کدهای قبلی)
             tempElement.textContent = temp + "°";
             descElement.textContent = weatherMain;
@@ -95,7 +145,7 @@ function getWeatherData(city) {
             if (locTimezone) locTimezone.textContent = timezoneStr;
 
             updateWeatherIcon(weatherMain);
-            changeBackgroundByTemp(temp);
+            changeProvinceBackground(currentTemp);
             updateWeatherAdvice(temp, weatherMain);
             
         })
@@ -111,31 +161,31 @@ function updateWeatherIcon(weather) {
     else if (weather === "Thunderstorm") iconElement.textContent = "⛈️";
     else iconElement.textContent = "🌫️"; 
 }
-function changeBackgroundByTemp(temp) {
-    let gradient = "";
+// این تابع باید بعد از دریافت اطلاعات از API فراخوانی شود
+// و متغیر temp (دمای واقعی) به آن پاس داده شود
+function changeProvinceBackground(temp) {
+    let bgGradient = "";
 
-    if (temp <= 10) {
-        gradient = "linear-gradient(180deg, #0f2027, #203a43, #2c5364)";
+    if (temp < 10) {
+        // سرد (آبی) - هماهنگ با راهنمای Cold
+        bgGradient = "linear-gradient(180deg, #4facfe, #00f2fe)"; 
     } 
-    else if (temp > 10 && temp <= 22) {
-        gradient = "linear-gradient(180deg, #4facfe, #00f2fe)";
+    else if (temp >= 10 && temp < 25) {
+        // معتدل (سبز) - هماهنگ با راهنمای Mild
+        bgGradient = "linear-gradient(180deg, #38ef7d, #11998e)"; 
     } 
-    else if (temp > 22 && temp <= 30) {
-        gradient = "linear-gradient(180deg, #f6d365, #fda085)";
+    else if (temp >= 25 && temp < 35) {
+        // گرم (زرد/نارنجی) - هماهنگ با راهنمای Warm
+        bgGradient = "linear-gradient(180deg, #f6d365, #fda085)"; 
     } 
     else {
-        gradient = "linear-gradient(180deg, #ff0844, #ffb199)";
+        // خیلی گرم (قرمز) - هماهنگ با راهنمای Hot
+        bgGradient = "linear-gradient(180deg, #ff0844, #ffb199)"; 
     }
 
-    const bgOverlay = document.getElementById('bg-overlay');
-    
-    // اول گرادیان جدید رو به لایه می‌دیم
-    bgOverlay.style.background = gradient;
-    
-    // بعد شفافیتش رو می‌بریم بالا تا با یک افکت نرم (Fade in) ظاهر بشه
-    bgOverlay.style.opacity = "1";
+    // اعمال گرادیان روی پس‌زمینه کل صفحه
+    document.body.style.background = bgGradient;
 }
-
 // تابع اختصاص انیمیشن به کارت اصلی
 function updateWeatherAnimation(weather) {
     const animLayer = document.querySelector('.weather-animation');
@@ -248,8 +298,15 @@ function renderChart(times, temperatures) {
 // تابع دریافت پیش‌بینی ساعات آینده برای نمودار و کارت ۵ روزه
 function getForecastData(city) {
     const apiKey = "be19ea3bdb73fda4db896dcf5aa1e82f"; 
-    const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${city},IR&appid=${apiKey}&units=metric`;
+    
+    // ==========================================
+    // اصلاح مهم: اول نام دقیق شهر را پیدا می‌کنیم
+    // ==========================================
+    const queryCity = provinceCapitals[city] || city;
+    // حالا آدرس API را با این نام دقیق می‌سازیم
+    const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${queryCity},IR&units=metric&appid=${apiKey}`;
 
+    // حالا درخواست را با آدرس درست به سرور می‌فرستیم
     fetch(forecastUrl)
         .then(response => {
             if (!response.ok) throw new Error("Network response was not ok");
@@ -427,4 +484,5 @@ setTimeout(() => {
     const aqiSection = document.getElementById('aqi-section');
     if (aqiSection) aqiObserver.observe(aqiSection);
 }, 300);
+
 

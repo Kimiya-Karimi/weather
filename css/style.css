@@ -73,8 +73,6 @@ path{
 
 
 path:hover{
-    fill:rgb(31, 43, 110);
-    filter:drop-shadow(0 0 15px #8ea4ac);
     cursor:pointer;
 }
 .hot{
@@ -94,7 +92,7 @@ path:hover{
 
     padding:12px 20px;
 
-    background:rgba(255,255,255,0.15);
+    background:rgb(255, 255, 255);
 
     backdrop-filter:blur(15px);
 
@@ -102,7 +100,7 @@ path:hover{
 
     border-radius:18px;
 
-    color:white;
+    color:rgb(14, 36, 63);
 
     font-family:Georgia, serif;
 
@@ -116,4 +114,179 @@ path:hover{
     transition:.2s;
 
     z-index:1000;
+    pointer-events: none;
+}
+
+/* تنظیمات کادر بالایی */
+.top-bar {
+    display: flex;
+    justify-content: space-between; /* تیتر رو می‌فرسته چپ، سرچ رو می‌فرسته راست */
+    align-items: flex-start;
+    padding: 40px 50px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    box-sizing: border-box;
+    z-index: 9999;
+    pointer-events: none; /* این باعث میشه فضای خالیِ نوار، روی کلیک‌های نقشه تاثیر نذاره */
+}
+
+/* تنظیمات کلی تیتر */
+.main-title {
+    pointer-events: auto; /* متن دوباره قابل انتخاب میشه */
+    margin: 0;
+    text-align: left; /* چپ‌چین کردن متن */
+    font-family: 'Libre Baskerville', serif;
+    line-height: 1; /* فاصله‌ی خطوط رو کم می‌کنه تا کلمات به هم بچسبن */
+}
+
+/* استایل کلمه بزرگ IRAN */
+.iran-text {
+    font-family: 'MonteCarlo', cursive;
+    font-size: 5.5rem; /* یه سایز خیلی بزرگ و جسورانه */
+    font-weight: 400;
+    font-style: italic;
+    letter-spacing: 4px;
+    color: #ffffff;
+    text-shadow: 2px 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* استایل کلمه Weather Map */
+.sub-text {
+    font-size: 1rem;
+    font-weight: 400;
+     /* ایتالیک کردن برای ایجاد تضاد با کلمه بالا */
+    color: rgba(255, 255, 255, 0.8); /* کمی شفاف‌تر از کلمه اصلی */
+    letter-spacing: 2px;
+}
+
+/* تنظیمات کادر اصلی سرچ باکس */
+.search-box {
+    pointer-events: auto;
+    display: flex;
+    align-items: center;
+    background: #ffffff; /* پس‌زمینه کاملا سفید مثل عکس */
+    border-radius: 50px; /* حالت کپسولی */
+    padding: 6px 6px 6px 22px; /* تنظیم فضاها (سمت راست کمتر تا دکمه مماس بشه) */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); /* سایه نرم برای ایجاد عمق روی نقشه */
+    width: 320px; 
+    margin-top: 15px;
+}
+
+/* تنظیمات بخش تایپ متن */
+.search-box input {
+    flex: 1; /* پر کردن تمام فضای باقیمانده */
+    border: none;
+    background: transparent;
+    color: #333333; /* رنگ تیره و خوانا برای متن */
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 1.05rem;
+    outline: none;
+}
+
+/* رنگ خاکستری ملایم برای متن راهنما (Placeholder) */
+.search-box input::placeholder {
+    color: #aeb2b9; 
+}
+
+/* تنظیمات دکمه آبی رنگ */
+.search-box button {
+    border: none;
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    cursor: pointer;
+    background: #316bea; /* رنگ آبی جذاب دقیقاً مشابه عکس */
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s ease;
+    /* ایجاد یک سایه آبی ملایم زیر خود دکمه */
+    box-shadow: 0 4px 12px rgba(49, 107, 234, 0.3); 
+}
+
+/* افکت هنگام رفتن موس روی دکمه */
+.search-box button:hover {
+    background: #2354c4; /* آبی تیره‌تر */
+    transform: scale(1.05); /* کمی بزرگنمایی */
+}
+
+/* تنظیمات ضخامت و ظاهر آیکون ذره‌بین */
+.search-box button svg {
+    width: 22px;
+    height: 22px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+/* نگهدارنده کل باکس‌های راهنما */
+.temperature-legend {
+    position: fixed;
+    bottom: 40px;
+    left: 50px; /* می‌توانی این را left کنی تا برود سمت چپ */
+    display: flex;
+    flex-direction: column;
+    gap: 12px; /* فاصله بین باکس‌های بیضی */
+    z-index: 999;
+}
+
+/* استایل کپسولی و شیشه‌ای برای هر ردیف */
+.legend-item {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.082);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50px; /* ایجاد حالت بیضی/کپسولی */
+    padding: 8px 20px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease;
+    cursor: default;
+}
+
+/* یه افکت هاور ملایم روی خود باکس‌های راهنما */
+.legend-item:hover {
+    transform: translateX(-5px);
+    background: rgba(255, 255, 255, 0.15);
+}
+
+/* تنظیمات متن داخل باکس */
+.legend-text {
+    color: #ffffff;
+    font-family: 'Libre Baskerville', sans-serif; /* هماهنگ با سرچ‌باکس */
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+}
+
+/* دایره‌های رنگی کنار متن */
+.color-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    margin-right: 15px; /* فاصله دایره از متن */
+}
+
+/* رنگ‌ها و هاله‌های نورِ اختصاصی هر دایره (هماهنگ با کدهای جاوااسکریپت) */
+.hot-dot {
+    background: #cf4131;
+   
+}
+
+.warm-dot {
+    background: #eab720;
+    
+}
+
+.mild-dot {
+    background: #2d9053;
+}
+
+.cold-dot {
+    background: #00f2fe;
+    
 }
