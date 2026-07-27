@@ -11,15 +11,32 @@
 	<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css2?family=Hurricane&display=swap" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css2?family=MonteCarlo&display=swap" rel="stylesheet">
+	
 </head>
 
 <body>
     
 <div class="top-bar">
     <h1 class="main-title">
-        <span class="iran-text">IRAN</span><br>
-        <span class="sub-text">Weather Map</span>
+        
+        <span class="sub-text">IRAN Weather</span>
     </h1>
+
+<!-- این بخش رو در یک جای مناسب بالای نقشه (مثلاً داخل top-bar) اضافه کن -->
+<div class="update-container">
+    <!-- متن لودینگ به انگلیسی -->
+    <span id="update-status">Fetching latest weather data... ⏳</span>
+    
+    <div id="refresh-wrapper" style="display: none;">
+        <span id="last-update-text">...</span>
+        <!-- دکمه به انگلیسی -->
+        <button id="refresh-btn">
+            <span class="refresh-icon" id="refresh-icon"></span>
+            Refresh
+        </button>
+    </div>
+</div>
+
     
 	<div class="temperature-legend">
     <div class="legend-item">
@@ -41,9 +58,10 @@
 </div>
     <!-- سرچ‌باکس رو فعلا می‌ذاریم سمت راست بمونه -->
     <div class="search-box">
-    <input type="text" id="searchInput" placeholder="Search province...">
+    <input type="text" id="search-input" placeholder="Search city...">
+	
     <button id="searchBtn">
-        
+        <ul id="suggestions-list" class="hidden"></ul>
         <svg viewBox="0 0 24 24">
             <circle cx="11" cy="11" r="8"></circle>
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
@@ -2863,5 +2881,9 @@
 
 <div id="tooltip"></div>
 <script src="js/script.js"></script>
+<!-- کپی‌رایت و منبع API -->
+    <div class="api-attribution">
+        Powered by <a href="https://openweathermap.org" target="_blank" rel="noopener noreferrer">OpenWeather</a>
+    </div>
 </body>
 </html>

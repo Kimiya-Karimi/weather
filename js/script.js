@@ -36,25 +36,29 @@ const apiCityNames = {
     9 : "Bandar Abbas", 1 : "Hamadan", 29: "Yazd"
 };
 
-// ۵. تابع تعیین رنگ نقشه با رنگ‌های خالص و درخشان
+// ۵. تابع تعیین رنگ نقشه
 function getGlowColor(temp) {
-    if (temp < 10) return "#3b959a";       // آبی (سرد)
-    if (temp >= 10 && temp < 25) return "#407053"; // سبز (معتدل)
-    if (temp >= 25 && temp < 35) return "#f2cd48"; // زرد (گرم)
-    return "#af3d33";                      // قرمز (خیلی گرم)
+    if (temp < 10) return "#3b959a";       
+    if (temp >= 10 && temp < 25) return "#407053"; 
+    if (temp >= 25 && temp < 35) return "#f2cd48"; 
+    return "#af3d33";                      
 }
-
-// ==========================================
-// ۶. تنظیمات نقشه، کَش کردن و دریافت همزمان دیتا
-// ==========================================
 
 const paths = document.querySelectorAll("path");
 const tempCache = {}; 
 
+// ۶. تابع اصلی دریافت اطلاعات (که گم شده بود!)
 async function loadMapData() {
     const cacheKey = 'iranWeatherData';
     const cacheTimeKey = 'iranWeatherTime';
     const cacheDuration = 15 * 60 * 1000; 
+
+    const statusText = document.getElementById('update-status');
+    const refreshWrapper = document.getElementById('refresh-wrapper');
+    const refreshIcon = document.getElementById('refresh-icon');
+
+    if (statusText) statusText.style.display = 'inline';
+    if (refreshWrapper) refreshWrapper.style.display = 'none';
 
     const cachedData = sessionStorage.getItem(cacheKey);
     const cachedTime = sessionStorage.getItem(cacheTimeKey);
@@ -63,47 +67,62 @@ async function loadMapData() {
     if (cachedData && cachedTime && (now - parseInt(cachedTime) < cacheDuration)) {
         Object.assign(tempCache, JSON.parse(cachedData));
         applyInitialColors(); 
+        
+        if (statusText) statusText.style.display = 'none';
+        if (refreshWrapper) refreshWrapper.style.display = 'flex';
+        if (refreshIcon) refreshIcon.classList.remove('spin');
+        updateTimeAgo();
         return;
     }
 
     const apiKey = "be19ea3bdb73fda4db896dcf5aa1e82f";
     const keys = Object.keys(apiCityNames);
+    const chunkSize = 5;
 
-    // گرفتن دیتا به صورت دونه‌دونه و امن برای جلوگیری از بلاک شدن API
-    for (const index of keys) {
-        const queryName = apiCityNames[index];
-        try {
-            const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${queryName},IR&units=metric&appid=${apiKey}`);
-            if (response.ok) {
-                const data = await response.json();
-                tempCache[index] = Math.round(data.main.temp);
+    for (let i = 0; i < keys.length; i += chunkSize) {
+        const chunk = keys.slice(i, i + chunkSize);
+        
+        const promises = chunk.map(async (index) => {
+            const queryName = apiCityNames[index];
+            try {
+                const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${queryName},IR&units=metric&appid=${apiKey}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    tempCache[index] = Math.round(data.main.temp);
+                }
+            } catch (error) {
+                console.error(`Error fetching data for ${queryName}:`, error);
             }
-        } catch (error) {
-            console.error(`Error fetching data for ${queryName}:`, error);
-        }
+        });
+
+        await Promise.all(promises);
+        applyInitialColors();
     }
 
     sessionStorage.setItem(cacheKey, JSON.stringify(tempCache));
     sessionStorage.setItem(cacheTimeKey, now.toString());
 
-    applyInitialColors();
+    if (statusText) statusText.style.display = 'none';
+    if (refreshWrapper) refreshWrapper.style.display = 'flex';
+    if (refreshIcon) refreshIcon.classList.remove('spin');
+    updateTimeAgo();
 }
 
-// تابع رنگ‌آمیزی اولیه با حالت مات
+// ۷. تابع رنگ‌آمیزی اولیه
 function applyInitialColors() {
     paths.forEach((province, index) => {
         const temp = tempCache[index];
         if (temp !== undefined) {
             const color = getGlowColor(temp);
             province.style.fill = color;
-            province.style.opacity = "0.9"; // حالت مات پیش‌فرض
+            province.style.opacity = "0.9"; 
             province.style.transition = "all 0.3s ease";
             province.dataset.baseColor = color; 
         }
     });
 }
 
-// رویدادهای موس (تولتیپ، افکت فوکوس و کلیک)
+// ۸. رویدادهای موس روی نقشه
 paths.forEach((province, index) => {
     
     province.addEventListener("mousemove", function(e) {
@@ -115,17 +134,12 @@ paths.forEach((province, index) => {
         const displayName = provinceNames[index];
         tooltip.style.opacity = 1;
 
-        // ترفند حرفه‌ای: بقیه استان‌ها رو محو می‌کنیم
         paths.forEach(p => {
             if(p !== this) p.style.opacity = "0.7";
         });
 
-        // استان فعلی رو کاملا روشن می‌کنیم
         this.style.opacity = "1.1";
         
-
-        
-
         if (tempCache[index] !== undefined) {
             const temp = tempCache[index];
             const glowColor = getGlowColor(temp);
@@ -136,7 +150,7 @@ paths.forEach((province, index) => {
             `;
             
             this.style.filter = `drop-shadow(0 0 12px ${glowColor})`;
-            this.style.stroke = "#ffffff"; // یک حاشیه سفید نازک به استانی که روش هستیم میدیم
+            this.style.stroke = "#ffffff"; 
             this.style.strokeWidth = "1.5px";
         } else {
             tooltip.innerHTML = `<b>${displayName}</b><br><span>⏳ ...</span>`;
@@ -149,7 +163,6 @@ paths.forEach((province, index) => {
         this.style.stroke = ""; 
         this.style.strokeWidth = ""; 
         
-        // برگرداندن همه استان‌ها به حالت اولیه (مات)
         paths.forEach(p => {
             if (p.dataset.baseColor) {
                 p.style.opacity = "0.9";
@@ -163,40 +176,174 @@ paths.forEach((province, index) => {
     });
 });
 
-loadMapData();
 
-// ==========================================
-// ۷. بخش فعال‌سازی باکس جستجو (سرچ هوشمند)
-// ==========================================
+// ۱۰. آپدیت زمان و دکمه رفرش
+function updateTimeAgo() {
+    const cacheTimeKey = 'iranWeatherTime';
+    const cachedTime = sessionStorage.getItem(cacheTimeKey);
+    const timeTextElement = document.getElementById('last-update-text');
+    
+    if (!cachedTime || !timeTextElement) return;
 
-const searchInput = document.getElementById("searchInput");
-const searchBtn = document.getElementById("searchBtn");
+    const now = new Date().getTime();
+    const diffMinutes = Math.floor((now - parseInt(cachedTime)) / (1000 * 60));
 
-function searchProvince() {
-    const query = searchInput.value.toLowerCase().trim();
-    if (!query) return;
-
-    let foundIndex = -1;
-
-    for (let index in provinceNames) {
-        if (provinceNames[index].toLowerCase().includes(query)) {
-            foundIndex = index;
-            break;
-        }
-    }
-
-    if (foundIndex !== -1) {
-        const name = provinceNames[foundIndex];
-        window.location.href = "province.html?name=" + name;
+    if (diffMinutes < 1) {
+        timeTextElement.textContent = "Updated just now";
     } else {
-        alert("Province not found!");
+        timeTextElement.textContent = `Updated ${diffMinutes} min ago`;
     }
 }
 
-searchBtn.addEventListener("click", searchProvince);
+setInterval(updateTimeAgo, 60000);
 
-searchInput.addEventListener("keypress", function(e) {
-    if (e.key === "Enter") {
-        searchProvince();
+const refreshBtnElement = document.getElementById('refresh-btn');
+if (refreshBtnElement) {
+    refreshBtnElement.addEventListener('click', () => {
+        document.getElementById('refresh-icon').classList.add('spin');
+        sessionStorage.removeItem('iranWeatherData');
+        sessionStorage.removeItem('iranWeatherTime');
+        for (let key in tempCache) delete tempCache[key];
+        loadMapData();
+    });
+}
+
+// ۱۱. فراخوانی تابع برای اولین بار (روشن کردن سایت)
+loadMapData();
+// ۱. دیکشنری شهرها (همونی که تو استان‌ها استفاده کردیم)
+const allCitiesData = {
+    "Alborz": ["Karaj", "Hashtgerd"],
+    "Ardabil": ["Ardabil", "Sareyn", "Parsabad"],
+    "Bushehr": ["Bushehr", "Borazjan"],
+    "Chaharmahal and Bakhtiari": ["Shahrekord", "Borujen"],
+    "East Azerbaijan": ["Tabriz", "Maragheh", "Jolfa"],
+    "Fars": ["Shiraz", "Marvdasht", "Kazerun"],
+    "Gilan": ["Rasht", "Lahijan", "Bandar-e Anzali"],
+    "Golestan": ["Gorgan", "Gonbad-e Kavus"],
+    "Hamadan": ["Hamadan", "Malayer"],
+    "Hormozgan": ["Bandar Abbas", "Kish"],
+    "Ilam": ["Ilam", "Mehran"],
+    "Isfahan": ["Isfahan", "Kashan", "Natanz"],
+    "Kerman": ["Kerman", "Sirjan", "Bam"],
+    "Kermanshah": ["Kermanshah", "Paveh"],
+    "Khuzestan": ["Ahvaz", "Abadan", "Dezful"],
+    "Kohgiluyeh and Boyer-Ahmad": ["Yasuj", "Dogonbadan"],
+    "Kurdistan": ["Sanandaj", "Saqqez", "Marivan"],
+    "Lorestan": ["Khorramabad", "Borujerd"],
+    "Markazi": ["Arak", "Saveh"],
+    "Mazandaran": ["Sari", "Amol", "Ramsar"],
+    "North Khorasan": ["Bojnurd", "Shirvan"],
+    "Qazvin": ["Qazvin", "Takestan"],
+    "Qom": ["Qom", "Kahak"],
+    "Razavi Khorasan": ["Mashhad", "Neyshabur"],
+    "Semnan": ["Semnan", "Shahrud"],
+    "Sistan and Baluchestan": ["Zahedan", "Chabahar"],
+    "South Khorasan": ["Birjand", "Tabas"],
+    "Tehran": ["Tehran", "Damavand", "Firoozkooh"],
+    "West Azerbaijan": ["Urmia", "Khoy", "Mahabad"],
+    "Yazd": ["Yazd", "Meybod"],
+    "Zanjan": ["Zanjan", "Abhar"]
+};
+
+// ۲. تبدیل دیکشنری به یک لیست فلت (تخت) برای جستجوی سریع
+const searchList = [];
+for (const [province, cities] of Object.entries(allCitiesData)) {
+    cities.forEach(city => {
+        searchList.push({ cityName: city, provName: province });
+    });
+}
+
+// ۳. گرفتن المان‌های HTML (با پشتیبانی از هر دو مدل نام‌گذاری برای جلوگیری از ارور)
+const searchInput = document.getElementById('search-input') || document.getElementById('searchInput'); 
+const suggestionsList = document.getElementById('suggestions-list');
+const searchBtn = document.getElementById('search-btn') || document.getElementById('searchBtn');
+
+// ۴. تابع اصلی جستجو و انتقال به صفحه استان
+function executeSearch(query) {
+    query = query.toLowerCase().trim();
+    if (!query) return;
+
+    // حالت اول: آیا کلمه‌ای که سرچ شده جزو شهرهاست؟
+    const foundCity = searchList.find(item => item.cityName.toLowerCase() === query);
+    
+    if (foundCity) {
+        // 🔴 اصلاح شد: آدرس مستقیم به فایل province.html
+        window.location.href = `province.html?name=${foundCity.provName}`;
+        return;
+    } 
+
+    // حالت دوم: آیا کلمه‌ای که سرچ شده خودش مستقیماً اسم استانه؟
+    const foundProv = Object.keys(allCitiesData).find(prov => prov.toLowerCase() === query);
+    if (foundProv) {
+        // 🔴 اصلاح شد: آدرس مستقیم به فایل province.html
+        window.location.href = `province.html?name=${foundProv}`;
+        return;
+    }
+
+    // اگه نه شهر بود نه استان:
+    alert("Location not found! Please select from the suggestions.");
+}
+
+// ۵. رویدادهای مربوط به کادر جستجو
+if (searchInput && suggestionsList) {
+    
+    // الف) وقتی کاربر تایپ می‌کند (باز شدن لیست پیشنهادی)
+    searchInput.addEventListener('input', function() {
+        const query = this.value.toLowerCase().trim();
+        suggestionsList.innerHTML = ''; 
+
+        if (query === '') {
+            suggestionsList.classList.remove('show');
+            return;
+        }
+
+        // فیلتر کردن کلمات مشابه (هم تو اسم شهرها هم تو اسم استان‌ها می‌گرده)
+        const filtered = searchList.filter(item => 
+            item.cityName.toLowerCase().includes(query) || item.provName.toLowerCase().includes(query)
+        );
+
+        if (filtered.length > 0) {
+            suggestionsList.classList.add('show');
+            
+            filtered.forEach(item => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <span class="s-city">${item.cityName.replace("-", " ")}</span> 
+                    <span class="s-prov">${item.provName}</span>
+                `;
+                
+                // کلیک روی یکی از گزینه‌های لیست
+                li.addEventListener('click', function() {
+                    // 🔴 اصلاح شد: آدرس مستقیم به فایل province.html
+                    window.location.href = `province.html?name=${item.provName}`;
+                });
+                
+                suggestionsList.appendChild(li);
+            });
+        } else {
+            suggestionsList.classList.remove('show');
+        }
+    });
+
+    // ب) وقتی کاربر دکمه Enter کیبورد را می‌زند
+    searchInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            executeSearch(this.value);
+        }
+    });
+}
+
+// ۶. وقتی کاربر روی دکمه آبی جستجو کلیک می‌کند
+if (searchBtn) {
+    searchBtn.addEventListener('click', function() {
+        if(searchInput) executeSearch(searchInput.value);
+    });
+}
+
+// ۷. بستن لیست کشویی با کلیک در هر جای خالیِ صفحه
+document.addEventListener('click', function(e) {
+    if (searchInput && suggestionsList && !searchInput.contains(e.target) && !suggestionsList.contains(e.target)) {
+        suggestionsList.classList.remove('show');
     }
 });

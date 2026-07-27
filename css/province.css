@@ -14,6 +14,9 @@ body {
     padding: 40px 0; 
    
 }
+
+
+
 .dashboard {
     width: 90%;
     max-width: 1200px;
@@ -21,26 +24,94 @@ body {
     grid-template-columns: 1fr 1fr;
     gap: 25px;
     
-    
+    /* نقشه چیدمان جدید با اضافه شدن cities و اصلاح نام‌ها */
     grid-template-areas:
         "header header"
         "hourly main"
         "forecast main"
+        "cities cities"  /* جایگاه جدید کادر شهرها */
         "advice advice"
-        "history history"
+        "highlights highlights" /* نام کلاس اصلاح شد */
         "air location";
 }
 
+/* -- جایگذاری دقیق کارت‌ها بر اساس نام کلاس‌های HTML -- */
+.chart-card { grid-area: hourly; }
+.forecast-card { grid-area: forecast; }
+.cities-card { grid-area: cities; min-height: auto; } /* اختصاص جایگاه به شهرها */
+.advice-card { grid-area: advice; min-height: 150px; }
+.highlights-card { grid-area: highlights; } /* نام کلاس اصلاح شد */
+.aqi-card { grid-area: air; min-height: 200px; } /* نام کلاس اصلاح شد */
+.location-card { grid-area: location; min-height: 200px; } /* نام کلاس اصلاح شد */
 
-.dashboard-header {
-    grid-area: header;
-    text-align: center;
-    color: white;
-    font-size: 2rem;
-    font-weight: 800;
-    margin-bottom: 10px;
-    letter-spacing: 2px;
+/* ========================================= */
+/* -- استایل‌های اختصاصی برای ردیف‌های شهرها -- */
+.cities-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 5px;
 }
+
+.city-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.03); /* پس‌زمینه خیلی ملایم */
+    padding: 12px 20px;
+    border-radius: 16px;
+    transition: all 0.2s ease;
+}
+
+.city-row:hover {
+    background: rgba(0, 0, 0, 0.06);
+    transform: translateY(-2px);
+}
+
+.city-name {
+    font-weight: 700;
+    color: #021133;
+    font-size: 1.05rem;
+}
+
+.city-info-group {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.city-cond-icon {
+    font-size: 1.3rem;
+}
+
+.city-temp-badge {
+    background: #577bcf; /* آبی هماهنگ با تم */
+    color: white;
+    padding: 6px 14px;
+    border-radius: 12px;
+    font-weight: 800;
+    font-size: 0.95rem;
+    box-shadow: 0 4px 10px rgba(87, 123, 207, 0.3);
+}
+
+/* آپدیت چیدمان موبایل */
+@media (max-width: 900px) {
+    .dashboard {
+        grid-template-columns: 1fr; 
+        grid-template-areas:
+            "header"
+            "main"
+            "hourly"
+            "forecast"
+            "cities" /* اضافه شدن به موبایل */
+            "advice"
+            "highlights" /* اصلاح نام */
+            "air"
+            "location";
+    }
+}
+
+
 
 
 .card,
@@ -356,8 +427,9 @@ body {
 .l-500 { bottom: -10px; left: 240px; }
 
 .location-card {
+    grid-area: location; /* این خط بهش میگه دقیقا بشینه تو جایگاه خودش تو شبکه */
     width: 100%;
-    grid-column: 1 / -1; 
+    /* خطِ grid-column: 1 / -1; رو کلا از اینجا پاک کردیم */
 }
 
 .location-details {

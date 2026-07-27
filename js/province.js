@@ -33,6 +33,42 @@ const provinceCapitals = {
     "Sistan and Baluchestan": "Zahedan",
     "Alborz": "Karaj"
 };
+
+const provinceCities = {
+    "Alborz": ["Karaj", "Hashtgerd"],
+    "Ardabil": ["Ardabil", "Sareyn", "Parsabad"],
+    "Bushehr": ["Bushehr", "Borazjan"],
+    "Chaharmahal and Bakhtiari": ["Shahrekord", "Borujen"],
+    "East Azerbaijan": ["Tabriz", "Maragheh", "Jolfa"],
+    "Fars": ["Shiraz", "Marvdasht", "Kazerun"],
+    "Gilan": ["Rasht", "Lahijan", "Bandar-e Anzali"],
+    "Guilan":["Rasht", "Lahijan", "Bandar-e Anzali","Langerud"],
+    "Golestan": ["Gorgan", "Gonbad-e Kavus"],
+    "Hamadan": ["Hamadan", "Malayer"],
+    "Hormozgan": ["Bandar Abbas", "Kish"],
+    "Ilam": ["Ilam", "Mehran"],
+    "Isfahan": ["Isfahan", "Kashan", "Natanz"],
+    "Kerman": ["Kerman", "Sirjan", "Bam"],
+    "Kermanshah": ["Kermanshah", "Paveh"],
+    "Khuzestan": ["Ahvaz", "Abadan", "Dezful"],
+    "Kohgiluyeh and Boyer-Ahmad": ["Yasuj", "Dogonbadan"],
+    "Kurdistan": ["Sanandaj", "Saqqez", "Marivan"],
+    "Lorestan": ["Khorramabad", "Borujerd"],
+    "Markazi": ["Arak", "Saveh"],
+    "Mazandaran": ["Sari", "Amol", "Ramsar"],
+    "North Khorasan": ["Bojnurd", "Shirvan"],
+    "Qazvin": ["Qazvin", "Takestan"],
+    "Qom": ["Qom", "Kahak"],
+    "Razavi Khorasan": ["Mashhad", "Neyshabur"],
+    "Semnan": ["Semnan", "Shahrud"],
+    "Sistan and Baluchestan": ["Zahedan", "Chabahar"],
+    "South Khorasan": ["Birjand", "Tabas"],
+    "Tehran": ["Tehran", "Damavand", "Firoozkooh"],
+    "West Azerbaijan": ["Urmia", "Khoy", "Mahabad"],
+    "Yazd": ["Yazd", "Meybod"],
+    "Zanjan": ["Zanjan", "Abhar"]
+};
+
 const urlParams = new URLSearchParams(window.location.search);
 const provinceName = urlParams.get('name');
 
@@ -60,6 +96,7 @@ if (provinceName) {
     
     
     getForecastData(provinceName);
+    loadImportantCitiesWeather(provinceName);
     
 } else {
     provinceTitleElement.textContent = "Unknown Location";
@@ -486,3 +523,54 @@ setTimeout(() => {
 }, 300);
 
 
+// تابع اختصاصی برای لود کردن دیتای شهرهای مهم هر استان
+function loadImportantCitiesWeather(province) {
+    const apiKey = "be19ea3bdb73fda4db896dcf5aa1e82f"; 
+    const container = document.getElementById('cities-list-container');
+    const citiesToLoad = provinceCities[province];
+
+    // اگر استانی کلیک شد که تو دیکشنری نبود (یا شهری براش نداشتیم)
+    if (!citiesToLoad || citiesToLoad.length === 0) {
+        if (container) container.innerHTML = "<p style='text-align: center; color: #64748b;'>No extra cities data available.</p>";
+        return;
+    }
+
+    if (container) container.innerHTML = ""; // پاک کردن متن لودینگ
+
+    citiesToLoad.forEach(city => {
+        // برای جلوگیری از باگ اسامی، فاصله‌ها رو تبدیل به URL-encoded می‌کنیم
+        const url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)},IR&appid=${apiKey}&units=metric`;
+        
+        fetch(url)
+            .then(res => {
+                if (!res.ok) throw new Error("City not found");
+                return res.json();
+            })
+            .then(data => {
+                const temp = Math.round(data.main.temp);
+                const weatherMain = data.weather[0].main;
+                
+                // انتخاب آیکون مشابه تابع اصلی خودت
+                let icon = "☀️";
+                if (weatherMain === "Rain" || weatherMain === "Drizzle") icon = "🌧️";
+                else if (weatherMain === "Clouds") icon = "☁️";
+                else if (weatherMain === "Snow") icon = "❄️";
+                else if (weatherMain === "Thunderstorm") icon = "⛈️";
+                else icon = "🌫️";
+                if (weatherMain === "Clear") icon = "☀️";
+
+                // ساختن ردیف اختصاصی برای شهر و اضافه کردنش به کادر
+                const cityRow = document.createElement('div');
+                cityRow.className = 'city-row';
+                cityRow.innerHTML = `
+                    <span class="city-name">${city.replace("-", " ")}</span>
+                    <div class="city-info-group">
+                        <span class="city-cond-icon">${icon}</span>
+                        <span class="city-temp-badge">${temp}°C</span>
+                    </div>
+                `;
+                container.appendChild(cityRow);
+            })
+            .catch(err => console.error(`Error loading weather for ${city}:`, err));
+    });
+}
