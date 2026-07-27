@@ -258,30 +258,39 @@ const searchInput = document.getElementById('search-input') || document.getEleme
 const suggestionsList = document.getElementById('suggestions-list');
 const searchBtn = document.getElementById('search-btn') || document.getElementById('searchBtn');
 
-// ۴. تابع اصلی جستجو و انتقال به صفحه استان
+
+// ۴. تابع اصلی جستجو (نسخه هوشمند و ارتقا یافته)
 function executeSearch(query) {
     query = query.toLowerCase().trim();
     if (!query) return;
 
-    // حالت اول: آیا کلمه‌ای که سرچ شده جزو شهرهاست؟
-    const foundCity = searchList.find(item => item.cityName.toLowerCase() === query);
+    // ۱. اول می‌گردیم ببینیم آیا کلمه دقیقاً با اسم یک شهر برابره؟
+    let foundMatch = searchList.find(item => item.cityName.toLowerCase() === query);
     
-    if (foundCity) {
-        // 🔴 اصلاح شد: آدرس مستقیم به فایل province.html
-        window.location.href = `province.html?name=${foundCity.provName}`;
-        return;
-    } 
-
-    // حالت دوم: آیا کلمه‌ای که سرچ شده خودش مستقیماً اسم استانه؟
-    const foundProv = Object.keys(allCitiesData).find(prov => prov.toLowerCase() === query);
-    if (foundProv) {
-        // 🔴 اصلاح شد: آدرس مستقیم به فایل province.html
-        window.location.href = `province.html?name=${foundProv}`;
-        return;
+    // ۲. اگر شهر نبود، می‌گردیم ببینیم دقیقاً اسم یک استانه؟
+    if (!foundMatch) {
+        const isProv = Object.keys(allCitiesData).find(prov => prov.toLowerCase() === query);
+        if (isProv) {
+            window.location.href = `province.html?name=${isProv}`;
+            return;
+        }
     }
 
-    // اگه نه شهر بود نه استان:
-    alert("Location not found! Please select from the suggestions.");
+    // ۳. 🟢 جادوی جدید: اگر تطابق دقیق پیدا نشد (کاربر فقط چند حرف تایپ کرده بود)
+    // اولین شهری که حروفش به کلمه‌ی سرچ شده می‌خوره رو به صورت خودکار انتخاب کن!
+    if (!foundMatch) {
+        foundMatch = searchList.find(item => 
+            item.cityName.toLowerCase().includes(query) || 
+            item.provName.toLowerCase().includes(query)
+        );
+    }
+
+    // ۴. انتقال به صفحه استان یا نمایش ارور (فقط در صورتی که کلمه‌ی عجیب‌غریبی تایپ شده باشه)
+    if (foundMatch) {
+        window.location.href = `province.html?name=${foundMatch.provName}`;
+    } else {
+        alert("Location not found! Please try another name.");
+    }
 }
 
 // ۵. رویدادهای مربوط به کادر جستجو
