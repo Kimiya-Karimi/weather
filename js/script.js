@@ -321,9 +321,9 @@ if (searchInput && suggestionsList) {
                     <span class="s-prov">${item.provName}</span>
                 `;
                 
-                // کلیک روی یکی از گزینه‌های لیست
-                li.addEventListener('click', function() {
-                    // 🔴 اصلاح شد: آدرس مستقیم به فایل province.html
+                // استفاده از mousedown برای برنده شدن در مسابقه با کادر جستجو!
+                li.addEventListener('mousedown', function(e) {
+                    e.preventDefault(); // این خط نمی‌ذاره کادر سرچ متوجه کلیک تو بشه
                     window.location.href = `province.html?name=${item.provName}`;
                 });
                 
