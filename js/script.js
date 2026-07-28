@@ -125,6 +125,9 @@ function applyInitialColors() {
 // ۸. رویدادهای موس روی نقشه
 paths.forEach((province, index) => {
     
+    // 🟢 خط طلایی و ضدگلوله: اگر این مسیر تو لیست استان‌های ما نیست، ازش رد شو!
+    if (!provinceNames[index]) return;
+
     province.addEventListener("mousemove", function(e) {
         tooltip.style.left = e.clientX + 20 + "px";
         tooltip.style.top = e.clientY + 20 + "px";
@@ -175,7 +178,6 @@ paths.forEach((province, index) => {
         window.location.href = "province.html?name=" + name;
     });
 });
-
 
 // ۱۰. آپدیت زمان و دکمه رفرش
 function updateTimeAgo() {
@@ -321,9 +323,11 @@ if (searchInput && suggestionsList) {
                     <span class="s-prov">${item.provName}</span>
                 `;
                 
-                // استفاده از mousedown برای برنده شدن در مسابقه با کادر جستجو!
-                li.addEventListener('mousedown', function(e) {
-                    e.preventDefault(); // این خط نمی‌ذاره کادر سرچ متوجه کلیک تو بشه
+
+                // کلیک روی گزینه‌ها و جلوگیری از سرایت آن به دکمه سرچ
+                li.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation(); // 🔴 جادوی اصلی: ترکاندن حباب! این خط نمی‌ذاره کلیک به پدرها برسه
                     window.location.href = `province.html?name=${item.provName}`;
                 });
                 
