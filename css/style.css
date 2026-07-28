@@ -1,97 +1,549 @@
-* { margin: 0; padding: 0; box-sizing: border-box; }
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
 
-body {
-    height: 100vh;
+
+body{
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    overflow:hidden;
+
+    background:
+    radial-gradient(circle at center, #577bcf, #021133);
+}
+
+
+.map-container{
+    width:750px;
+
+    animation: appear 1.5s ease;
+}
+
+
+.iran-map{
+    width:100%;
+    opacity:0.8;
+    height: auto;
+    filter:
+    drop-shadow(0 0 25px #414040);
+
+    animation:pulse 4s infinite ease-in-out;
+}
+
+
+@keyframes pulse{
+    50%{
+        filter:
+        drop-shadow(0 0 45px rgb(234, 231, 231));
+    }
+}
+
+
+.iran-map:hover{
+    opacity:1;
+    transform:scale(1.03);
+}
+
+
+@keyframes appear{
+
+    from{
+        opacity:0;
+        transform:scale(0.7);
+        filter:blur(20px);
+    }
+
+    to{
+        opacity:1;
+        transform:scale(1);
+        filter:blur(0);
+    }
+
+}
+path{
+    fill:rgba(255, 255, 255, 0.868);
+    stroke:rgb(255, 255, 255);
+    stroke-width:1;
+    transition:0.3s;
+}
+
+
+path:hover{
+    cursor:pointer;
+}
+.hot{
+ background: rgba(255,120,50,.4);
+}
+
+.cold{
+ background: rgba(80,160,255,.4);
+}
+
+.rainy{
+ background: rgba(50,200,220,.4);
+}
+
+#tooltip{
+    position:fixed;
+
+    padding:12px 20px;
+
+    background:rgb(255, 255, 255);
+
+    backdrop-filter:blur(15px);
+
+    border:1px solid rgba(255,255,255,0.3);
+
+    border-radius:18px;
+
+    color:rgb(14, 36, 63);
+
+    font-family:Georgia, serif;
+
+    box-shadow:
+    0 10px 30px rgba(0,0,0,.2);
+
+    pointer-events:none;
+
+    opacity:0;
+
+    transition:.2s;
+
+    z-index:1000;
+    pointer-events: none;
+}
+
+/* تنظیمات کادر بالایی */
+.top-bar {
+    display: flex;
+    justify-content: space-between; /* تیتر رو می‌فرسته چپ، سرچ رو می‌فرسته راست */
+    align-items: flex-start;
+    padding: 40px 50px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    box-sizing: border-box;
+    z-index: 9999;
+    pointer-events: none; /* این باعث میشه فضای خالیِ نوار، روی کلیک‌های نقشه تاثیر نذاره */
+}
+
+/* تنظیمات کلی تیتر */
+.main-title {
+    pointer-events: auto; /* متن دوباره قابل انتخاب میشه */
+    margin: 0;
+    text-align: left; /* چپ‌چین کردن متن */
+    font-family: 'Libre Baskerville', serif;
+    line-height: 1; /* فاصله‌ی خطوط رو کم می‌کنه تا کلمات به هم بچسبن */
+}
+
+
+
+/* استایل کلمه Weather Map */
+.sub-text {
+    font-size: 1.25rem;
+    font-weight: 400; 
+    color: rgba(255, 255, 255, 0.922); /* کمی شفاف‌تر از کلمه اصلی */
+    letter-spacing: 2px;
+    position: relative;
+    top:-8px;
+    left: -20px;
+    text-shadow: white;
+}
+
+/* تنظیمات کادر اصلی سرچ باکس */
+.search-box {
+    pointer-events: auto;
+    display: flex;
+    align-items: center;
+    background: #ffffff; /* پس‌زمینه کاملا سفید مثل عکس */
+    border-radius: 50px; /* حالت کپسولی */
+    padding: 6px 6px 6px 22px; /* تنظیم فضاها (سمت راست کمتر تا دکمه مماس بشه) */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); /* سایه نرم برای ایجاد عمق روی نقشه */
+    width: 320px; 
+    margin-top: 15px;
+    position: relative;
+    right: -30px;
+    top: -12px;
+}
+
+/* تنظیمات بخش تایپ متن */
+.search-box input {
+    flex: 1; /* پر کردن تمام فضای باقیمانده */
+    border: none;
+    background: transparent;
+    color: #333333; /* رنگ تیره و خوانا برای متن */
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 1.05rem;
+    outline: none;
+}
+
+/* رنگ خاکستری ملایم برای متن راهنما (Placeholder) */
+.search-box input::placeholder {
+    color: #aeb2b9; 
+}
+
+/* تنظیمات دکمه آبی رنگ */
+.search-box button {
+    border: none;
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    cursor: pointer;
+    background: #316bea; /* رنگ آبی جذاب دقیقاً مشابه عکس */
+    color: white;
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow: hidden; /* جلوگیری از اسکرول خوردن نقشه تو موبایل */
-    background: radial-gradient(circle at center, #577bcf, #021133);
+    transition: all 0.3s ease;
+    /* ایجاد یک سایه آبی ملایم زیر خود دکمه */
+    box-shadow: 0 4px 12px rgba(49, 107, 234, 0.3); 
 }
 
-.map-container { width: 750px; animation: appear 1.5s ease; }
-.iran-map { width: 100%; opacity: 0.8; height: auto; filter: drop-shadow(0 0 25px #414040); animation: pulse 4s infinite ease-in-out; }
-
-@keyframes pulse { 50% { filter: drop-shadow(0 0 45px rgb(234, 231, 231)); } }
-.iran-map:hover { opacity: 1; transform: scale(1.03); }
-@keyframes appear { from { opacity: 0; transform: scale(0.7); filter: blur(20px); } to { opacity: 1; transform: scale(1); filter: blur(0); } }
-
-path { fill: rgba(255, 255, 255, 0.868); stroke: rgb(255, 255, 255); stroke-width: 1; transition: 0.3s; }
-path:hover { cursor: pointer; }
-
-#tooltip {
-    position: fixed; padding: 12px 20px; background: rgb(255, 255, 255);
-    backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 18px; color: rgb(14, 36, 63); font-family: Georgia, serif;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, .2); opacity: 0; transition: .2s;
-    z-index: 1000; pointer-events: none; max-width: 180px; word-wrap: break-word;
+/* افکت هنگام رفتن موس روی دکمه */
+.search-box button:hover {
+    background: #2354c4; /* آبی تیره‌تر */
+    transform: scale(1.05); /* کمی بزرگنمایی */
 }
 
-.top-bar { display: flex; justify-content: space-between; align-items: flex-start; padding: 40px 50px; position: absolute; top: 0; left: 0; width: 100%; z-index: 9999; pointer-events: none; }
-.main-title { pointer-events: auto; margin: 0; text-align: left; font-family: 'Libre Baskerville', serif; line-height: 1; }
-.sub-text { font-size: 1.25rem; font-weight: 400; color: rgba(255, 255, 255, 0.922); letter-spacing: 2px; position: relative; top: -8px; left: -20px; }
-
-.search-box { pointer-events: auto; display: flex; align-items: center; background: #ffffff; border-radius: 50px; padding: 6px 6px 6px 22px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); width: 320px; margin-top: 15px; position: relative; right: -30px; top: -12px; }
-.search-box input { flex: 1; border: none; background: transparent; color: #333333; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.05rem; outline: none; }
-.search-box input::placeholder { color: #aeb2b9; }
-.search-box button { border: none; border-radius: 50%; width: 48px; height: 48px; cursor: pointer; background: #316bea; color: white; display: flex; justify-content: center; align-items: center; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(49, 107, 234, 0.3); }
-.search-box button:hover { background: #2354c4; transform: scale(1.05); }
-.search-box button svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
-
-.temperature-legend { position: fixed; bottom: 40px; left: 30px; display: flex; flex-direction: column; gap: 12px; z-index: 999; }
-.legend-item { display: flex; align-items: center; background: rgba(255, 255, 255, 0.082); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 50px; padding: 8px 20px; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); transition: transform 0.3s ease; cursor: default; }
-.legend-item:hover { transform: translateX(-5px); background: rgba(255, 255, 255, 0.15); }
-.legend-text { color: #ffffff; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.8rem; letter-spacing: 1px; }
-.color-dot { width: 14px; height: 14px; border-radius: 50%; margin-right: 15px; }
-
-.hot-dot { background: #cf4131; }
-.warm-dot { background: #eab720; }
-.mild-dot { background: #2d9053; }
-.cold-dot { background: #00f2fe; }
-
-/* 🟢 مشکل کادر آپدیت اینجا حل شد: استفاده از عرض اتوماتیک و جلوگیری از شکستن متن */
-.update-container {
-    position: fixed !important; bottom: 215px !important; left: 30px !important; top: auto !important; right: auto !important; z-index: 9999 !important; margin: 0 !important;
-    display: flex; align-items: center; justify-content: space-between !important;
-    width: auto !important; min-width: 190px !important; gap: 15px !important;
-    background: rgba(30, 41, 59, 0.21) !important; border-radius: 50px !important;
-    padding: 6px 6px 6px 16px !important; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important; pointer-events: auto !important;
+/* تنظیمات ضخامت و ظاهر آیکون ذره‌بین */
+.search-box button svg {
+    width: 22px;
+    height: 22px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
 }
-#last-update-text { color: whitesmoke !important; font-weight: 600 !important; font-family: 'Plus Jakarta Sans', sans-serif !important; font-size: 0.75rem !important; white-space: nowrap !important; }
-#refresh-btn { background: #3b82f6 !important; color: #ffffff !important; border: none !important; border-radius: 50px !important; padding: 8px 18px !important; font-family: 'Plus Jakarta Sans', sans-serif !important; font-size: 0.8rem !important; font-weight: bold !important; cursor: pointer !important; box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3) !important; transition: all 0.3s ease !important; pointer-events: auto !important; }
-#refresh-btn:hover { background: #2563eb !important; transform: translateY(-1px) !important; }
+/* نگهدارنده کل باکس‌های راهنما */
+.temperature-legend {
+    position: fixed;
+    bottom: 40px;
+    left: 30px; /* می‌توانی این را left کنی تا برود سمت چپ */
+    display: flex;
+    flex-direction: column;
+    gap: 12px; /* فاصله بین باکس‌های بیضی */
+    z-index: 999;
+}
 
-@keyframes pulse { 0% { opacity: 0.6; } 50% { opacity: 1; } 100% { opacity: 0.6; } }
-.spin { animation: spin-anim 1s linear infinite; }
-@keyframes spin-anim { 100% { transform: rotate(360deg); } }
+/* استایل کپسولی و شیشه‌ای برای هر ردیف */
+.legend-item {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.082);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50px; /* ایجاد حالت بیضی/کپسولی */
+    padding: 8px 20px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease;
+    cursor: default;
+}
 
-h1, .title { font-family: 'Plus Jakarta Sans', sans-serif !important; font-weight: 800 !important; letter-spacing: 5px !important; text-transform: uppercase !important; color: #ffffff !important; text-shadow: 0 4px 15px rgba(255, 255, 255, 0.2) !important; }
-.legend-box, #search-container { background: rgba(255, 255, 255, 0.05) !important; backdrop-filter: blur(12px) !important; -webkit-backdrop-filter: blur(12px) !important; border: 1px solid rgba(255, 255, 255, 0.1) !important; border-radius: 16px !important; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3) !important; color: #e2e8f0 !important; }
-#search-container { position: relative !important; }
+/* یه افکت هاور ملایم روی خود باکس‌های راهنما */
+.legend-item:hover {
+    transform: translateX(-5px);
+    background: rgba(255, 255, 255, 0.15);
+}
 
-#suggestions-list { position: absolute !important; right: 0 !important; left: auto !important; width: 320px !important; top: 110% !important; background: rgba(30, 41, 59, 0.95) !important; backdrop-filter: blur(10px) !important; border-radius: 16px !important; list-style: none !important; padding: 0 !important; margin: 0 !important; max-height: 220px !important; overflow-y: auto !important; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3) !important; z-index: 9999 !important; display: none !important; }
-#suggestions-list.show { display: block !important; }
-#suggestions-list li { padding: 12px 20px !important; color: #f8fafc !important; font-family: 'Plus Jakarta Sans', sans-serif !important; font-size: 0.9rem !important; cursor: pointer !important; border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important; transition: background 0.2s ease !important; }
-#suggestions-list li:last-child { border-bottom: none !important; }
-#suggestions-list li:hover { background: rgba(59, 130, 246, 0.4) !important; }
-#suggestions-list::-webkit-scrollbar { width: 6px; }
-#suggestions-list::-webkit-scrollbar-thumb { background: #475569; border-radius: 10px; }
+/* تنظیمات متن داخل باکس */
+.legend-text {
+    color: #ffffff;
+    font-family: 'Plus Jakarta Sans', sans-serif; /* هماهنگ با سرچ‌باکس */
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+}
 
-.api-attribution { position: fixed !important; bottom: 25px !important; right: 35px !important; font-family: 'Plus Jakarta Sans', sans-serif !important; font-size: 0.75rem !important; color: rgba(255, 255, 255, 0.5) !important; z-index: 9999 !important; pointer-events: auto !important; }
-.api-attribution a { color: rgba(255, 255, 255, 0.8) !important; text-decoration: none !important; font-weight: 700 !important; transition: color 0.3s ease, text-shadow 0.3s ease !important; }
-.api-attribution a:hover { color: #ffffff !important; text-shadow: 0 0 10px rgba(255, 255, 255, 0.7) !important; }
+/* دایره‌های رنگی کنار متن */
+.color-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    margin-right: 15px; /* فاصله دایره از متن */
+}
 
-/* --- ریسپانسیو اختصاصی موبایل برای نقشه --- */
-@media (max-width: 768px) {
-    .map-container { width: 100% !important; padding: 0 10px; }
-    .top-bar { flex-direction: column; align-items: center; padding: 20px 15px; gap: 15px; }
-    .main-title { text-align: center; font-size: 26px !important; }
-    .sub-text { left: 0; top: 0; }
-    .search-box { width: 100% !important; max-width: 320px; right: 0 !important; top: 0 !important; margin-top: 5px; }
-    #search-container { width: 100%; display: flex; justify-content: center; }
-    #suggestions-list { width: 90% !important; left: 5% !important; right: auto !important; }
+/* رنگ‌ها و هاله‌های نورِ اختصاصی هر دایره (هماهنگ با کدهای جاوااسکریپت) */
+.hot-dot {
+    background: #cf4131;
+   
+}
+
+.warm-dot {
+    background: #eab720;
     
-    .temperature-legend { bottom: 15px; left: 10px; transform: scale(0.75); transform-origin: bottom left; gap: 8px; }
-    .update-container { bottom: 190px !important; left: 10px !important; transform: scale(0.85); transform-origin: bottom left; }
-    .api-attribution { bottom: 10px !important; right: 15px !important; font-size: 0.65rem !important; }
+}
+
+.mild-dot {
+    background: #2d9053;
+}
+
+.cold-dot {
+    background: #00f2fe;
+    
+}
+/* -- استایل اصلی باکس آپدیت -- */
+/* -- استایل باکس آپدیت کاملاً بیضی -- */
+.update-container {
+    position: fixed !important;
+    bottom: 215px !important; 
+    left: 30px !important;    
+    top: auto !important;     
+    right: auto !important;   
+    z-index: 9999 !important;
+    margin: 0 !important;
+    
+    display: flex;
+    align-items: center;
+    justify-content: space-between !important; /* این خط متن و دکمه را از هم دور می‌کند تا باکس پر شود */
+    
+    /* 🔴 اینجا عرض باکس رو تنظیم کن تا دقیقا مماس با باکس‌های پایینش بشه: */
+    width: 180px !important; 
+    
+    /* رنگ پایه تیره (که گفتی خودت تغییرش میدی) */
+    background: rgba(30, 41, 59, 0.21) !important; 
+    border-radius: 50px !important; /* حفظ فرم بیضی */
+    padding: 6px 6px 6px 14px !important; /* حاشیه داخلی رو تنظیم کردم که دکمه قشنگ بشینه گوشه */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important; 
+    pointer-events: auto !important;
+}
+/* -- استایل متن -- */
+#last-update-text {
+    color:whitesmoke !important;
+    font-weight: 600 !important;
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+    font-size: 0.7rem !important; 
+    position: relative;
+    top:4px;
+    left:-5px;
+}
+
+/* -- استایل دکمه بیضی -- */
+#refresh-btn {
+    background: #3b82f6 !important;
+    color: #ffffff !important;
+    border: none !important;
+    /* این خط دکمه رو هم کاملا بیضی می‌کنه تا توی کادر قشنگ بشینه: */
+    border-radius: 50px !important; 
+    padding: 6px 16px !important; 
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+    font-size: 0.8rem !important; 
+    font-weight: bold !important;
+    cursor: pointer !important;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3) !important;
+    transition: all 0.3s ease !important;
+    pointer-events: auto !important;
+}
+
+#refresh-btn:hover {
+    background: #2563eb !important;
+    transform: translateY(-1px) !important;
+}
+
+/* انیمیشن چشمک زدن متن لودینگ */
+@keyframes pulse {
+    0% { opacity: 0.6; }
+    50% { opacity: 1; }
+    100% { opacity: 0.6; }
+}
+
+/* انیمیشن چرخش آیکون رفرش */
+.spin {
+    animation: spin-anim 1s linear infinite;
+}
+
+@keyframes spin-anim {
+    100% { transform: rotate(360deg); }
+}
+/* -- تغییر بک‌گراند به یک گرادیان تیره و مدرن -- */
+body {
+    background: linear-gradient(135deg, #0f172a, #1e293b, #334155) !important;
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+    color: #f8fafc !important;
+}
+
+/* -- مدرن کردن فونت عنوان سایت (کلمه IRAN) -- */
+/* اگر عنوانت کلاس خاصی داره اسمش رو اینجا بذار، مثلا h1 */
+h1, .title { 
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+    font-weight: 800 !important;
+    letter-spacing: 5px !important;
+    text-transform: uppercase !important;
+    color: #ffffff !important;
+    text-shadow: 0 4px 15px rgba(255,255,255,0.2) !important;
+}
+
+/* -- تبدیل کادرهای سایت (مثل راهنمای رنگ و لودینگ) به شیشه مات -- */
+ .legend-box, #search-container {
+    background: rgba(255, 255, 255, 0.05) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3) !important;
+    color: #e2e8f0 !important;
+}
+/* -- تنظیمات کادر اصلی جستجو -- */
+#search-container {
+    position: relative !important; /* این خط خیلی مهمه تا لیست دقیقا زیر همین کادر باز بشه */
+}
+
+/* -- استایل باکسِ لیست پیشنهادات -- */
+#suggestions-list {
+    position: absolute !important;
+    right: 0 !important;     /* می‌چسبه به لبه راستِ سرچ‌باکس */
+    left: auto !important;   /* دستور قبلی رو خنثی می‌کنه */
+    width: 320px !important;
+    top: 110% !important; /* باز شدن با کمی فاصله از زیر سرچ‌باکس */
+    background: rgba(30, 41, 59, 0.95) !important; /* یک رنگ تیره و شیک */
+    backdrop-filter: blur(10px) !important;
+    border-radius: 16px !important;
+    list-style: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    max-height: 220px !important; /* اگر استان‌ها زیاد شد... */
+    overflow-y: auto !important;  /* ...لیست قابلیت اسکرول خوردن پیدا می‌کنه */
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3) !important;
+    z-index: 9999 !important;
+    display: none !important; /* در حالت عادی مخفی است */
+    
+}
+
+/* وقتی کلاس show به لیست اضافه بشه، نمایش داده میشه */
+#suggestions-list.show {
+    display: block !important;
+}
+
+/* -- استایل هر کدوم از استان‌ها داخل لیست -- */
+#suggestions-list li {
+    padding: 12px 20px !important;
+    color: #f8fafc !important;
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+    font-size: 0.9rem !important;
+    cursor: pointer !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+    transition: background 0.2s ease !important;
+}
+
+#suggestions-list li:last-child {
+    border-bottom: none !important;
+}
+
+/* افکت موقع رفتن موس روی اسم استان */
+#suggestions-list li:hover {
+    background: rgba(59, 130, 246, 0.4) !important; /* یک آبی ملایم */
+}
+
+/* -- زیباسازی نوار اسکرولِ لیست -- */
+#suggestions-list::-webkit-scrollbar {
+    width: 6px;
+}
+#suggestions-list::-webkit-scrollbar-thumb {
+    background: #475569;
+    border-radius: 10px;
+}
+/* -- استایل کادر منبع (پایین-راست) -- */
+.api-attribution {
+    position: fixed !important;
+    bottom: 25px !important;
+    right: 35px !important;
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+    font-size: 0.75rem !important;
+    color: rgba(255, 255, 255, 0.5) !important; /* رنگ سفید با شفافیت ۵۰ درصد */
+    z-index: 9999 !important;
+    pointer-events: auto !important;
+}
+
+.api-attribution a {
+    color: rgba(255, 255, 255, 0.8) !important; /* رنگ لینک کمی روشن‌تر */
+    text-decoration: none !important; /* حذف خط زیر لینک */
+    font-weight: 700 !important;
+    transition: color 0.3s ease, text-shadow 0.3s ease !important;
+}
+
+/* افکت جذاب موقع رفتن موس روی لینک */
+.api-attribution a:hover {
+    color: #ffffff !important;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.7) !important; /* درخشش ملایم */
+}
+
+
+
+/* ========================================= */
+/* --- ریسپانسیو اختصاصی موبایل برای نقشه --- */
+/* ========================================= */
+@media (max-width: 768px) {
+    /* ۱. آزاد کردن عرض نقشه */
+    .map-container {
+        width: 100% !important;
+        padding: 0 10px;
+    }
+
+    /* ۲. مرتب کردن نوار بالایی (رفتن سرچ زیر تیتر) */
+    .top-bar {
+        flex-direction: column;
+        align-items: center;
+        padding: 20px 15px;
+        gap: 15px;
+    }
+    .main-title {
+        text-align: center;
+        font-size: 26px !important;
+    }
+    .sub-text {
+        left: 0;
+        top: 0;
+    }
+
+    /* ۳. فیکس کردن کادر جستجو که از صفحه بیرون نزند */
+    .search-box {
+        width: 100% !important;
+        max-width: 320px;
+        right: 0 !important;
+        top: 0 !important;
+        margin-top: 5px;
+    }
+    
+    #search-container {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+
+    #suggestions-list {
+        width: 90% !important;
+        left: 5% !important;
+        right: auto !important;
+    }
+
+    /* ۴. کوچک کردن و جابجایی راهنمای رنگ و دکمه آپدیت */
+    .temperature-legend {
+        bottom: 15px;
+        left: 10px;
+        transform: scale(0.75);
+        transform-origin: bottom left;
+        gap: 8px;
+    }
+    
+    .update-container {
+        position: relative !important;
+        bottom: auto !important;
+        left: auto !important;
+        width: 100% !important;
+        max-width: 320px !important;
+        margin: 10px auto !important;
+        transform: none !important;
+    }
+
+    /* ۵. جابجایی متن کپی‌رایت */
+    .api-attribution {
+        bottom: 10px !important;
+        right: 15px !important;
+        font-size: 0.65rem !important;
+    }
 }
