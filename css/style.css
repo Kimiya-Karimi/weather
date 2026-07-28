@@ -522,20 +522,18 @@ h1, .title {
         gap: 8px;
     }
     
-
+/* 🟢 اینجا بهش می‌گیم کاملاً بیاد پایین صفحه زیر راهنمای رنگ‌ها قرار بگیره تا بالای صفحه کاملاً خلوت بشه */
     .update-container {
         position: relative !important;
         bottom: auto !important;
         left: auto !important;
         width: 90vw !important;
         max-width: 320px !important;
-        margin: 10px auto 15px auto !important;
-        background: rgba(30, 41, 59, 0.6) !important;
+        margin: 20px auto 10px auto !important;
+        background: rgba(30, 41, 59, 0.8) !important;
         padding: 8px 15px !important;
+        order: 10; /* می‌فرستدش انتهای المان‌ها */
     }
-
-
-
 
     /* ۵. جابجایی متن کپی‌رایت */
     .api-attribution {
