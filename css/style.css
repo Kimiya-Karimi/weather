@@ -465,35 +465,64 @@ h1, .title {
 }
 
 
-
 /* ========================================= */
 /* --- ریسپانسیو اختصاصی موبایل برای نقشه --- */
 /* ========================================= */
 @media (max-width: 768px) {
-    /* ۱. آزاد کردن عرض نقشه */
-    .map-container {
-        width: 100% !important;
-        padding: 0 10px;
+    
+    /* ۱. تغییر جهت بدنه به عمودی (تا نقشه مچاله نشود) */
+    body {
+        flex-direction: column !important;
+        justify-content: flex-start !important;
+        padding-top: 25px !important;
+        height: auto !important; 
+        overflow-y: auto !important; 
     }
 
-    /* ۲. مرتب کردن نوار بالایی (رفتن سرچ زیر تیتر) */
+    /* ۲. تنظیم کادر بالایی (نگهدارنده تیتر، آپدیت و سرچ) */
     .top-bar {
         position: relative !important;
-        padding: 20px 15px !important;
+        padding: 0 15px !important;
+        width: 100% !important;
         display: flex !important;
         flex-direction: column !important;
         align-items: center !important;
-        gap: 15px !important; /* این عدد فاصله بین تیتر، آپدیت و جستجو رو تعیین می‌کنه */
+        gap: 15px !important; /* فاصله دقیق بین باکس‌ها */
     }
+
     .main-title {
         text-align: center;
         font-size: 26px !important;
     }
+    
     .sub-text {
         left: 0;
         top: 0;
     }
 
+    /* ۳. باکس آپدیت (می‌چسبه بالای سرچ) */
+    .update-container {
+        order: 1 !important;
+        position: relative !important;
+        bottom: auto !important;
+        left: auto !important;
+        width: max-content !important; /* فیت شدن سایز باکس با متن */
+        background: rgba(30, 41, 59, 0.75) !important;
+        padding: 4px 6px 4px 14px !important;
+        margin: 0 !important;
+        transform: none !important;
+    }
+
+    /* ۴. سرچ باکس (می‌چسبه دقیقاً زیر آپدیت) */
+    .search-box {
+        order: 2 !important;
+        width: 90vw !important;
+        max-width: 320px !important;
+        position: relative !important;
+        right: 0 !important;
+        top: 0 !important;
+        margin: 0 !important;
+    }
     
     #search-container {
         width: 100%;
@@ -505,42 +534,48 @@ h1, .title {
         width: 90% !important;
         left: 5% !important;
         right: auto !important;
+        top: 110% !important;
     }
 
-    /* ۴. کوچک کردن و جابجایی راهنمای رنگ و دکمه آپدیت */
-    .temperature-legend {
-        bottom: 15px;
-        left: 10px;
-        transform: scale(0.75);
-        transform-origin: bottom left;
-        gap: 8px;
+    /* ۵. نقشه (برگشت به سایز اصلی و قرار گرفتن زیر کادر بالایی) */
+    .map-container {
+        width: 100% !important;
+        padding: 0 10px !important;
+        margin-top: 20px !important; /* فاصله مناسب از سرچ‌باکس */
+        display: flex !important;
+        justify-content: center !important;
     }
-    
-    .update-container {
-        order: 1 !important;
+
+    .iran-map {
+        width: 100% !important;
+        height: auto !important;
+    }
+
+    /* ۶. راهنمای رنگ‌ها (در پایین نقشه) */
+    .temperature-legend {
         position: relative !important;
         bottom: auto !important;
         left: auto !important;
-        width: max-content !important; /* عرض دقیقاً به اندازه متن */
-        background: rgba(30, 41, 59, 0.75) !important;
-        padding: 4px 6px 4px 14px !important;
-        margin: 0 !important; /* مارجین رو صفر کردیم تا الکی فاصله نندازه */
-        transform: none !important;
-    }
-    .search-box {
-        order: 2 !important;
-        width: 90vw !important;
-        max-width: 320px !important;
-        position: relative !important;
-        right: 0 !important;
-        top: 0 !important;
-        margin: 0 !important; /* مارجین اضافه حذف شد */
+        width: 90vw;
+        max-width: 320px;
+        margin: 20px auto 10px auto;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
     }
 
-    /* ۵. جابجایی متن کپی‌رایت */
+    .legend-item {
+        padding: 6px 12px;
+        justify-content: flex-start;
+    }
+
+    /* ۷. کپی‌رایت */
     .api-attribution {
-        bottom: 10px !important;
-        right: 15px !important;
+        position: relative !important;
+        bottom: auto !important;
+        right: auto !important;
+        text-align: center;
+        margin: 15px 0 30px 0;
         font-size: 0.65rem !important;
     }
 }
