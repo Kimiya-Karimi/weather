@@ -478,10 +478,12 @@ h1, .title {
 
     /* ۲. مرتب کردن نوار بالایی (رفتن سرچ زیر تیتر) */
     .top-bar {
-        flex-direction: column;
-        align-items: center;
-        padding: 20px 15px;
-        gap: 15px;
+        position: relative !important;
+        padding: 20px 15px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 15px !important; /* این عدد فاصله بین تیتر، آپدیت و جستجو رو تعیین می‌کنه */
     }
     .main-title {
         text-align: center;
@@ -490,14 +492,6 @@ h1, .title {
     .sub-text {
         left: 0;
         top: 0;
-    }
-
-    /* ۱. باکس جستجو بالا قرار می‌گیره */
-    .search-box {
-        order: 1 !important;
-        width: 90vw !important;
-        max-width: 320px !important;
-        margin-top: 5px !important;
     }
 
     
@@ -523,15 +517,24 @@ h1, .title {
     }
     
     .update-container {
-        order: 2 !important;
+        order: 1 !important;
         position: relative !important;
         bottom: auto !important;
         left: auto !important;
-        width: max-content !important;
-        margin: 8px auto 12px auto !important;
+        width: max-content !important; /* عرض دقیقاً به اندازه متن */
         background: rgba(30, 41, 59, 0.75) !important;
         padding: 4px 6px 4px 14px !important;
+        margin: 0 !important; /* مارجین رو صفر کردیم تا الکی فاصله نندازه */
         transform: none !important;
+    }
+    .search-box {
+        order: 2 !important;
+        width: 90vw !important;
+        max-width: 320px !important;
+        position: relative !important;
+        right: 0 !important;
+        top: 0 !important;
+        margin: 0 !important; /* مارجین اضافه حذف شد */
     }
 
     /* ۵. جابجایی متن کپی‌رایت */
