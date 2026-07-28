@@ -500,29 +500,6 @@ h1, .title {
         margin-top: 5px !important;
     }
 
-    /* ۲. باکس آپدیت می‌چسبه دقیقا زیر باکس جستجو با فاصله کم */
-    .update-container {
-        order: 2 !important;
-        position: relative !important;
-        bottom: auto !important;
-        left: auto !important;
-        width: max-content !important;
-        margin: 8px auto 12px auto !important;
-        background: rgba(30, 41, 59, 0.75) !important;
-        padding: 4px 6px 4px 14px !important;
-        transform: none !important;
-    }
-
-    /* ۳. حتماً مطمئن شو نوار بالایی حالت فملی (Flex) داره تا دستور order کار کنه */
-    .top-bar {
-        position: relative !important;
-        padding: 10px 15px !important;
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: center !important;
-        gap: 0px !important;
-    }
-    
     
     #search-container {
         width: 100%;
@@ -545,7 +522,17 @@ h1, .title {
         gap: 8px;
     }
     
-    
+    .update-container {
+        order: 2 !important;
+        position: relative !important;
+        bottom: auto !important;
+        left: auto !important;
+        width: max-content !important;
+        margin: 8px auto 12px auto !important;
+        background: rgba(30, 41, 59, 0.75) !important;
+        padding: 4px 6px 4px 14px !important;
+        transform: none !important;
+    }
 
     /* ۵. جابجایی متن کپی‌رایت */
     .api-attribution {
