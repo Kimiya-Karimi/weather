@@ -473,51 +473,85 @@ body {
 
 
 
-
-/* ========================================= ========================================= */
+/* ========================================= */
+/* --- ریسپانسیو اختصاصی موبایل برای داشبورد --- */
+/* ========================================= */
 @media screen and (max-width: 768px) {
     
-   
-    .dashboard-container { 
-        display: flex;
-        flex-direction: column; 
-        gap: 15px;
-        padding: 10px; 
+    .dashboard { 
+        width: 95%;
+        gap: 15px; 
     }
 
-   
     #main-page-title {
         font-size: 26px;
+        margin-bottom: 10px;
+    }
+
+    /* ۱. جمع‌وجور کردن کارت اصلی (کاهش فاصله‌های وحشتناک) */
+    .glass-layer {
+        padding: 30px 15px; /* پدینگ ۵۵ پیکسلی رو کم کردیم */
+    }
+    
+    .weather-icon {
+        font-size: 60px; /* آیکون کوچکتر */
+        margin: 15px;
+    }
+    
+    .temperature {
+        font-size: 60px; /* فونت دما کوچکتر */
+    }
+    
+    .info {
+        margin-top: 30px;
+        gap: 20px; /* فاصله ۶۰ پیکسلی بین رطوبت و باد رو کم کردیم */
+        flex-wrap: wrap; /* اگه جا نشد برن خط بعد */
+    }
+
+    /* ۲. کوچک کردن کارت‌های کناری */
+    .card {
+        padding: 20px; /* پدینگ ۳۵ پیکسلی کارت‌ها رو کم کردیم */
+    }
+    
+    .card h2 {
+        font-size: 1.1rem;
         margin-bottom: 15px;
     }
 
+    /* ۳. مرتب کردن قرص‌های روزهای آینده */
+    .forecast-days-container {
+        justify-content: center;
+        gap: 8px;
+    }
     
+    .forecast-pill {
+        padding: 6px 12px;
+        font-size: 13px;
+    }
+
+    /* ۴. مرتب کردن کارت‌های Highlights و هوا */
     .highlights-grid {
         grid-template-columns: 1fr;
         gap: 10px;
     }
 
-    
     .location-details {
+        display: grid;
         grid-template-columns: 1fr;
+        gap: 10px;
     }
 
-    
+    /* ۵. فیکس کردن نمودار عقربه‌ای (بدون اینکه بزنه بیرون) */
     .gauge-wrapper {
-        transform: scale(0.9);
-        margin-top: 15px;
+        transform: scale(0.85);
+        margin-top: 10px;
     }
 
-    
-    .chart-container {
-        height: 200px !important; 
+    /* ۶. کادر لیست شهرها */
+    .city-row {
+        padding: 10px 15px;
     }
-    
-    .weather-card {
-        height: auto; 
-        padding: 30px 20px; 
-        min-height: unset; 
+    .city-name {
+        font-size: 0.95rem;
     }
-
-
 }

@@ -471,3 +471,76 @@ h1, .title {
     color: #ffffff !important;
     text-shadow: 0 0 10px rgba(255, 255, 255, 0.7) !important; /* درخشش ملایم */
 }
+
+
+
+/* ========================================= */
+/* --- ریسپانسیو اختصاصی موبایل برای نقشه --- */
+/* ========================================= */
+@media (max-width: 768px) {
+    /* ۱. آزاد کردن عرض نقشه */
+    .map-container {
+        width: 100% !important;
+        padding: 0 10px;
+    }
+
+    /* ۲. مرتب کردن نوار بالایی (رفتن سرچ زیر تیتر) */
+    .top-bar {
+        flex-direction: column;
+        align-items: center;
+        padding: 20px 15px;
+        gap: 15px;
+    }
+    .main-title {
+        text-align: center;
+        font-size: 26px !important;
+    }
+    .sub-text {
+        left: 0;
+        top: 0;
+    }
+
+    /* ۳. فیکس کردن کادر جستجو که از صفحه بیرون نزند */
+    .search-box {
+        width: 100% !important;
+        max-width: 320px;
+        right: 0 !important;
+        top: 0 !important;
+        margin-top: 5px;
+    }
+    
+    #search-container {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+
+    #suggestions-list {
+        width: 90% !important;
+        left: 5% !important;
+        right: auto !important;
+    }
+
+    /* ۴. کوچک کردن و جابجایی راهنمای رنگ و دکمه آپدیت */
+    .temperature-legend {
+        bottom: 15px;
+        left: 10px;
+        transform: scale(0.75);
+        transform-origin: bottom left;
+        gap: 8px;
+    }
+    
+    .update-container {
+        bottom: 190px !important; 
+        left: 10px !important;
+        transform: scale(0.85);
+        transform-origin: bottom left;
+    }
+
+    /* ۵. جابجایی متن کپی‌رایت */
+    .api-attribution {
+        bottom: 10px !important;
+        right: 15px !important;
+        font-size: 0.65rem !important;
+    }
+}

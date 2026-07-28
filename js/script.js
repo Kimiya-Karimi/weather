@@ -47,7 +47,7 @@ function getGlowColor(temp) {
 const paths = document.querySelectorAll("path");
 const tempCache = {}; 
 
-// ۶. تابع اصلی دریافت اطلاعات (که گم شده بود!)
+// ۶. تابع اصلی دریافت اطلاعات
 async function loadMapData() {
     const cacheKey = 'iranWeatherData';
     const cacheTimeKey = 'iranWeatherTime';
@@ -75,7 +75,6 @@ async function loadMapData() {
         return;
     }
 
-    const apiKey = "be19ea3bdb73fda4db896dcf5aa1e82f";
     const keys = Object.keys(apiCityNames);
     const chunkSize = 5;
 
@@ -85,7 +84,7 @@ async function loadMapData() {
         const promises = chunk.map(async (index) => {
             const queryName = apiCityNames[index];
             try {
-                const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${queryName},IR&units=metric&appid=${apiKey}`);
+                const response = await fetch(`/.netlify/functions/fetch-weather?endpoint=weather&q=${queryName}`);
                 if (response.ok) {
                     const data = await response.json();
                     tempCache[index] = Math.round(data.main.temp);
@@ -125,7 +124,6 @@ function applyInitialColors() {
 // ۸. رویدادهای موس روی نقشه
 paths.forEach((province, index) => {
     
-    // 🟢 خط طلایی و ضدگلوله: اگر این مسیر تو لیست استان‌های ما نیست، ازش رد شو!
     if (!provinceNames[index]) return;
 
     province.addEventListener("mousemove", function(e) {
@@ -212,7 +210,8 @@ if (refreshBtnElement) {
 
 // ۱۱. فراخوانی تابع برای اولین بار (روشن کردن سایت)
 loadMapData();
-// ۱. دیکشنری شهرها (همونی که تو استان‌ها استفاده کردیم)
+
+// ۱. دیکشنری شهرها
 const allCitiesData = {
     "Alborz": ["Karaj", "Hashtgerd"],
     "Ardabil": ["Ardabil", "Sareyn", "Parsabad"],
@@ -247,7 +246,6 @@ const allCitiesData = {
     "Zanjan": ["Zanjan", "Abhar"]
 };
 
-// ۲. تبدیل دیکشنری به یک لیست فلت (تخت) برای جستجوی سریع
 const searchList = [];
 for (const [province, cities] of Object.entries(allCitiesData)) {
     cities.forEach(city => {
@@ -255,21 +253,16 @@ for (const [province, cities] of Object.entries(allCitiesData)) {
     });
 }
 
-// ۳. گرفتن المان‌های HTML (با پشتیبانی از هر دو مدل نام‌گذاری برای جلوگیری از ارور)
 const searchInput = document.getElementById('search-input') || document.getElementById('searchInput'); 
 const suggestionsList = document.getElementById('suggestions-list');
 const searchBtn = document.getElementById('search-btn') || document.getElementById('searchBtn');
 
-
-// ۴. تابع اصلی جستجو (نسخه هوشمند و ارتقا یافته)
 function executeSearch(query) {
     query = query.toLowerCase().trim();
     if (!query) return;
 
-    // ۱. اول می‌گردیم ببینیم آیا کلمه دقیقاً با اسم یک شهر برابره؟
     let foundMatch = searchList.find(item => item.cityName.toLowerCase() === query);
     
-    // ۲. اگر شهر نبود، می‌گردیم ببینیم دقیقاً اسم یک استانه؟
     if (!foundMatch) {
         const isProv = Object.keys(allCitiesData).find(prov => prov.toLowerCase() === query);
         if (isProv) {
@@ -278,8 +271,6 @@ function executeSearch(query) {
         }
     }
 
-    // ۳. 🟢 جادوی جدید: اگر تطابق دقیق پیدا نشد (کاربر فقط چند حرف تایپ کرده بود)
-    // اولین شهری که حروفش به کلمه‌ی سرچ شده می‌خوره رو به صورت خودکار انتخاب کن!
     if (!foundMatch) {
         foundMatch = searchList.find(item => 
             item.cityName.toLowerCase().includes(query) || 
@@ -287,7 +278,6 @@ function executeSearch(query) {
         );
     }
 
-    // ۴. انتقال به صفحه استان یا نمایش ارور (فقط در صورتی که کلمه‌ی عجیب‌غریبی تایپ شده باشه)
     if (foundMatch) {
         window.location.href = `province.html?name=${foundMatch.provName}`;
     } else {
@@ -295,10 +285,7 @@ function executeSearch(query) {
     }
 }
 
-// ۵. رویدادهای مربوط به کادر جستجو
 if (searchInput && suggestionsList) {
-    
-    // الف) وقتی کاربر تایپ می‌کند (باز شدن لیست پیشنهادی)
     searchInput.addEventListener('input', function() {
         const query = this.value.toLowerCase().trim();
         suggestionsList.innerHTML = ''; 
@@ -308,7 +295,6 @@ if (searchInput && suggestionsList) {
             return;
         }
 
-        // فیلتر کردن کلمات مشابه (هم تو اسم شهرها هم تو اسم استان‌ها می‌گرده)
         const filtered = searchList.filter(item => 
             item.cityName.toLowerCase().includes(query) || item.provName.toLowerCase().includes(query)
         );
@@ -323,11 +309,9 @@ if (searchInput && suggestionsList) {
                     <span class="s-prov">${item.provName}</span>
                 `;
                 
-
-                // کلیک روی گزینه‌ها و جلوگیری از سرایت آن به دکمه سرچ
                 li.addEventListener('click', function(e) {
                     e.preventDefault();
-                    e.stopPropagation(); // 🔴 جادوی اصلی: ترکاندن حباب! این خط نمی‌ذاره کلیک به پدرها برسه
+                    e.stopPropagation(); 
                     window.location.href = `province.html?name=${item.provName}`;
                 });
                 
@@ -338,7 +322,6 @@ if (searchInput && suggestionsList) {
         }
     });
 
-    // ب) وقتی کاربر دکمه Enter کیبورد را می‌زند
     searchInput.addEventListener('keypress', function(e) {
         if (e.key === 'Enter') {
             e.preventDefault();
@@ -347,14 +330,12 @@ if (searchInput && suggestionsList) {
     });
 }
 
-// ۶. وقتی کاربر روی دکمه آبی جستجو کلیک می‌کند
 if (searchBtn) {
     searchBtn.addEventListener('click', function() {
         if(searchInput) executeSearch(searchInput.value);
     });
 }
 
-// ۷. بستن لیست کشویی با کلیک در هر جای خالیِ صفحه
 document.addEventListener('click', function(e) {
     if (searchInput && suggestionsList && !searchInput.contains(e.target) && !suggestionsList.contains(e.target)) {
         suggestionsList.classList.remove('show');
