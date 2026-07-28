@@ -522,17 +522,15 @@ h1, .title {
         gap: 8px;
     }
     
-/* 🟢 اینجا بهش می‌گیم کاملاً بیاد پایین صفحه زیر راهنمای رنگ‌ها قرار بگیره تا بالای صفحه کاملاً خلوت بشه */
     .update-container {
         position: relative !important;
         bottom: auto !important;
         left: auto !important;
-        width: 90vw !important;
-        max-width: 320px !important;
-        margin: 20px auto 10px auto !important;
-        background: rgba(30, 41, 59, 0.8) !important;
-        padding: 8px 15px !important;
-        order: 10; /* می‌فرستدش انتهای المان‌ها */
+        width: max-content !important; /* عرض دقیقاً به اندازه متن و دکمه بشه و کش نیاد */
+        margin: -5px auto 10px auto !important; /* فاصله بالا منفی شد تا بچسبه زیر جستجو */
+        background: rgba(30, 41, 59, 0.75) !important;
+        padding: 4px 6px 4px 14px !important;
+        transform: none !important;
     }
 
     /* ۵. جابجایی متن کپی‌رایت */
