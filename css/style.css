@@ -530,15 +530,20 @@ h1, .title {
         gap: 8px;
     }
     
+
     .update-container {
         position: relative !important;
         bottom: auto !important;
         left: auto !important;
-        width: 100% !important;
+        width: 90vw !important;
         max-width: 320px !important;
-        margin: 10px auto !important;
-        transform: none !important;
+        margin: 10px auto 15px auto !important;
+        background: rgba(30, 41, 59, 0.6) !important;
+        padding: 8px 15px !important;
     }
+
+
+
 
     /* ۵. جابجایی متن کپی‌رایت */
     .api-attribution {
